@@ -17,12 +17,12 @@ public class Launcher extends Application
 	{
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MainScreen.fxml"));
         Parent root = (Parent)loader.load();
-        Scene scene = new Scene(root,750,600);
+        Scene scene = new Scene(root);
         MainScreenController controller = (MainScreenController)loader.getController();
         controller.setStage(stage);
 		stage.setTitle("PicView");
 		stage.setScene(scene);
-
+        stage.sizeToScene();
 		stage.show();
 	}
 }

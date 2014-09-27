@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ResourceBundle;
 
 import javafx.fxml.Initializable;
@@ -31,19 +32,13 @@ public class MainScreenController implements Initializable {
     @FXML
     MenuBar menuBar;
     @FXML
-    MenuItem menuOpenText;
-    @FXML
-    MenuItem menuOpenImage;
-    @FXML
-    MenuItem menuSaveImage;
-    @FXML
-    MenuItem menuSaveText;
-    @FXML
     ImageView imageViewLeft, imageViewCenter, imageViewRight;
     @FXML
     Button saveLeftImage, saveCenterImage, saveRightImage;
     @FXML
     Button loadLeftImage, loadCenterImage, loadRightImage;
+    @FXML
+    Button loadText, saveText;
     @FXML
     TextArea textBox;
 
@@ -55,6 +50,8 @@ public class MainScreenController implements Initializable {
         saveLeftImage.setOnAction(this::handleImageSaveEvent);
         saveCenterImage.setOnAction(this::handleImageSaveEvent);
         saveRightImage.setOnAction(this::handleImageSaveEvent);
+        loadText.setOnAction(this::handleTextLoadEvent);
+        saveText.setOnAction(this::handleTextSaveEvent);
     }
 
     private void handleImageSaveEvent(ActionEvent event) {
@@ -89,6 +86,25 @@ public class MainScreenController implements Initializable {
         }
     }
 
+    private void handleTextSaveEvent(ActionEvent event) {
+        final FileChooser fileChooser = new FileChooser();
+
+        configureFileChooserText(fileChooser);
+        File file = fileChooser.showSaveDialog(stage);
+        if(!saveText(file,textBox.getText())) {
+            System.err.println("Text failed to save.");
+        }
+    }
+
+    private void handleTextLoadEvent(ActionEvent event) {
+        final FileChooser fileChooser = new FileChooser();
+        configureFileChooserText(fileChooser);
+        File file = fileChooser.showOpenDialog(stage);
+        String text = loadText(file);
+        if(text != null) {
+            textBox.setText(text);
+        }
+    }
 
     private static void configureFileChooserImage(
             final FileChooser fileChooser) {
@@ -114,10 +130,6 @@ public class MainScreenController implements Initializable {
     }
 
     private void openImageFromImageView(ImageView view) {
-        /*
-            Charles and Jamie, This is our test to get image and text loading working.
-            This is called by the handlers of the FileChooser.
-        */
 
         try {
             final FileChooser fileChooser = new FileChooser();
@@ -131,18 +143,6 @@ public class MainScreenController implements Initializable {
         }
     }
 
-    /*
-            Charles & Jamie, sample usage with preferred FileChooser for
-            save location.  Extracts an image from an ImageView.
-            Not 100% positive saveImageFromImageView or saveText work without integration
-            with UI.  Will work with you if there are any hangups with these
-            methods.
-
-            FileChooser fileChooser = new FileChooser();
-            fileChooser.setTitle("Save Image");
-            File file = fileChooser.showSaveDialog(stage);
-            saveImageFromImageView(file, imgView);
-    */
     private boolean saveImageFromImageView(ImageView imgView) {
         try {
             final FileChooser fileChooser = new FileChooser();
@@ -171,6 +171,16 @@ public class MainScreenController implements Initializable {
         }
 
         return true;
+    }
+
+    private String loadText(File file) {
+        try {
+            byte[] bytes = Files.readAllBytes(Paths.get(file.getPath()));
+            return new String(bytes);
+        } catch(IOException x) {
+            System.err.format("IOException: %s%n", x);
+            return null;
+        }
     }
 
     public void setStage(Stage stage) {
