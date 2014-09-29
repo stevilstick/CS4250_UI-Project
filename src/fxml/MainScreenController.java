@@ -54,7 +54,7 @@ public class MainScreenController implements Initializable {
         saveText.setOnAction(this::handleTextSaveEvent);
     }
 
-    private void handleImageSaveEvent(ActionEvent event) {
+    protected void handleImageSaveEvent(ActionEvent event) {
         Button sourceButton = (Button)event.getSource();
         if(sourceButton.equals(saveLeftImage)) {
             saveImageFromImageView(imageViewLeft);
@@ -70,7 +70,7 @@ public class MainScreenController implements Initializable {
         }
     }
 
-    private void handleImageLoadEvent(ActionEvent event) {
+    protected void handleImageLoadEvent(ActionEvent event) {
         Button sourceButton = (Button)event.getSource();
         if(sourceButton.equals(loadLeftImage)) {
             openImageFromImageView(imageViewLeft);
@@ -86,7 +86,7 @@ public class MainScreenController implements Initializable {
         }
     }
 
-    private void handleTextSaveEvent(ActionEvent event) {
+    protected void handleTextSaveEvent(ActionEvent event) {
         final FileChooser fileChooser = new FileChooser();
 
         configureFileChooserText(fileChooser);
@@ -96,7 +96,7 @@ public class MainScreenController implements Initializable {
         }
     }
 
-    private void handleTextLoadEvent(ActionEvent event) {
+    protected void handleTextLoadEvent(ActionEvent event) {
         final FileChooser fileChooser = new FileChooser();
         configureFileChooserText(fileChooser);
         File file = fileChooser.showOpenDialog(stage);
@@ -106,7 +106,7 @@ public class MainScreenController implements Initializable {
         }
     }
 
-    private static void configureFileChooserImage(
+    protected static void configureFileChooserImage(
             final FileChooser fileChooser) {
         fileChooser.setTitle("View Pictures");
         fileChooser.setInitialDirectory(
@@ -118,7 +118,7 @@ public class MainScreenController implements Initializable {
         );
     }
 
-    private static void configureFileChooserText(
+    protected static void configureFileChooserText(
             final FileChooser fileChooser) {
         fileChooser.setTitle("View Text Files");
         fileChooser.setInitialDirectory(
@@ -129,7 +129,7 @@ public class MainScreenController implements Initializable {
         );
     }
 
-    private void openImageFromImageView(ImageView view) {
+    protected void openImageFromImageView(ImageView view) {
 
         try {
             final FileChooser fileChooser = new FileChooser();
@@ -143,7 +143,7 @@ public class MainScreenController implements Initializable {
         }
     }
 
-    private boolean saveImageFromImageView(ImageView imgView) {
+    protected boolean saveImageFromImageView(ImageView imgView) {
         try {
             final FileChooser fileChooser = new FileChooser();
 
@@ -159,7 +159,7 @@ public class MainScreenController implements Initializable {
         return true;
     }
 
-    private boolean saveText(File file, String text) {
+    protected boolean saveText(File file, String text) {
         if (file != null) {
             Charset charset = Charset.forName("US-ASCII");
             try (BufferedWriter writer = Files.newBufferedWriter(file.toPath(), charset)) {
@@ -173,7 +173,7 @@ public class MainScreenController implements Initializable {
         return true;
     }
 
-    private String loadText(File file) {
+    protected String loadText(File file) {
         try {
             byte[] bytes = Files.readAllBytes(Paths.get(file.getPath()));
             return new String(bytes);
