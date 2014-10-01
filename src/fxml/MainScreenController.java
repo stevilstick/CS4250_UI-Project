@@ -97,10 +97,17 @@ public class MainScreenController implements Initializable {
     }
 
     protected void handleTextLoadEvent(ActionEvent event) {
+        String text = null;
+        File file;
         final FileChooser fileChooser = new FileChooser();
+
         configureFileChooserText(fileChooser);
-        File file = fileChooser.showOpenDialog(stage);
-        String text = loadText(file);
+        file = fileChooser.showOpenDialog(stage);
+
+        if(file != null) {
+            text = loadText(file);
+        }
+
         if(text != null) {
             textBox.setText(text);
         }
@@ -132,11 +139,17 @@ public class MainScreenController implements Initializable {
     protected void openImageFromImageView(ImageView view) {
 
         try {
+            Image image = null;
+            File file;
             final FileChooser fileChooser = new FileChooser();
+
             configureFileChooserImage(fileChooser);
-            File file = fileChooser.showOpenDialog(stage);
-            Image image = new Image(file.toURI().toString());
-            view.setImage(image);
+            file = fileChooser.showOpenDialog(stage);
+            if(file != null) {
+                image = new Image(file.toURI().toString());
+                view.setImage(image);
+            }
+
 
         } catch (Exception e) {
             System.out.println("Oh no");
@@ -145,12 +158,16 @@ public class MainScreenController implements Initializable {
 
     protected boolean saveImageFromImageView(ImageView imgView) {
         try {
+            File file;
             final FileChooser fileChooser = new FileChooser();
 
             configureFileChooserImage(fileChooser);
-            File file = fileChooser.showSaveDialog(stage);
-            ImageIO.write(SwingFXUtils.fromFXImage(imgView.getImage(),
-                    null), "png", file);
+            file = fileChooser.showSaveDialog(stage);
+            if(file != null) {
+                ImageIO.write(SwingFXUtils.fromFXImage(imgView.getImage(),
+                        null), "png", file);
+            }
+
         } catch (IOException ex) {
             System.out.println(ex.getMessage());
             return false;
